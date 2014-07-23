@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	arguments, _ := docopt.Parse(usage(), nil, true, "0.1", false)
+	arguments, _ := docopt.Parse(usage(), nil, true, "0.2", false)
 
 	port := arguments["--port"].(string)
 	path, _ := filepath.Abs(arguments["<directory>"].(string))
