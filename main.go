@@ -37,5 +37,15 @@ Options:
 func start(path, port string) {
 	log.Println("Serving files from", path)
 	log.Println("Listening on port", port)
-  panic(http.ListenAndServe(fmt.Sprintf(":%v", port), http.FileServer(http.Dir(path))))
+
+	http.Handle("/", http.FileServer(http.Dir(path)))
+	panic(http.ListenAndServe(fmt.Sprintf(":%v", port), Log(http.DefaultServeMux)))
 }
+
+func Log(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+		handler.ServeHTTP(w, r)
+	})
+}
+
