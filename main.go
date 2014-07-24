@@ -3,6 +3,7 @@ package main
 import (
   "fmt"
 	"log"
+	"os"
   "net/http"
 	"path/filepath"
 	"github.com/docopt/docopt.go"
@@ -14,7 +15,20 @@ func main() {
 	port := arguments["--port"].(string)
 	path, _ := filepath.Abs(arguments["<directory>"].(string))
 
+	ok, _ := exists(path)
+	if !ok {
+		log.Println(path, "does not exists")
+		os.Exit(1)
+	}
+
 	start(path, port)
+}
+
+func exists(path string) (bool, error) {
+    _, err := os.Stat(path)
+    if err == nil { return true, nil }
+    if os.IsNotExist(err) { return false, nil }
+    return false, err
 }
 
 func usage() string {
